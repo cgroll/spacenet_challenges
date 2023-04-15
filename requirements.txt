@@ -18,3 +18,7 @@ contextily
 rioxarray
 shapely
 jupyterlab
+dvc
+tqdm
+dvc-gdrive
+scikit-learn
