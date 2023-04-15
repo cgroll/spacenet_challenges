@@ -1,0 +1,18 @@
+stages:
+  train_test_split:
+    cmd: python scripts/split_test_train.py
+    deps:
+    - data/raw/SN1/train/
+    outs:
+    - data/interim/SN1/test/3band/
+    - data/interim/SN1/test/8band/
+    - data/interim/SN1/test/geojson/
+    - data/interim/SN1/train_val/3band/
+    - data/interim/SN1/train_val/8band/
+    - data/interim/SN1/train_val/geojson/
+    - data/interim/SN1/train/3band/
+    - data/interim/SN1/train/8band/
+    - data/interim/SN1/train/geojson/
+    - data/interim/SN1/val/3band/
+    - data/interim/SN1/val/8band/
+    - data/interim/SN1/val/geojson/
