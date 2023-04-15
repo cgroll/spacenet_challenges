@@ -16,3 +16,23 @@ stages:
     - data/interim/SN1/val/3band/
     - data/interim/SN1/val/8band/
     - data/interim/SN1/val/geojson/
+  rasterize_3band:
+    cmd: python scripts/rasterize_segments.py
+    deps:
+    - data/interim/SN1/test/3band/
+    - data/interim/SN1/test/8band/
+    - data/interim/SN1/test/geojson/
+    - data/interim/SN1/train_val/3band/
+    - data/interim/SN1/train_val/8band/
+    - data/interim/SN1/train_val/geojson/
+    - data/interim/SN1/train/3band/
+    - data/interim/SN1/train/8band/
+    - data/interim/SN1/train/geojson/
+    - data/interim/SN1/val/3band/
+    - data/interim/SN1/val/8band/
+    - data/interim/SN1/val/geojson/
+    outs:
+    - data/interim/SN1/test/geo_raster_3band/
+    - data/interim/SN1/train_val/geo_raster_3band/
+    - data/interim/SN1/train/geo_raster_3band/
+    - data/interim/SN1/val/geo_raster_3band/

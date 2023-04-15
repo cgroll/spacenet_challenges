@@ -56,3 +56,71 @@ stages:
       md5: e38408d63b12a6242e39154beec792b4.dir
       size: 25107829
       nfiles: 885
+  rasterize_3band:
+    cmd: python scripts/rasterize_segments.py
+    deps:
+    - path: data/interim/SN1/test/3band/
+      md5: 6626ba48220e903186703cf7970d5ca2.dir
+      size: 557120871
+      nfiles: 1041
+    - path: data/interim/SN1/test/8band/
+      md5: 95a36e7a33a405d581e3a75b9e107adc.dir
+      size: 187270712
+      nfiles: 1041
+    - path: data/interim/SN1/test/geojson/
+      md5: 6441563af4e8a256cb4494aa4563ade3.dir
+      size: 29222287
+      nfiles: 1041
+    - path: data/interim/SN1/train/3band/
+      md5: f7bc20a726248929b645f905db803daa.dir
+      size: 2683332700
+      nfiles: 5014
+    - path: data/interim/SN1/train/8band/
+      md5: c072cec6c5a3296b1534c6d11f3d90ab.dir
+      size: 901963888
+      nfiles: 5014
+    - path: data/interim/SN1/train/geojson/
+      md5: 95ee9afc5bfb94855fcb9d867672ca8a.dir
+      size: 146801657
+      nfiles: 5014
+    - path: data/interim/SN1/train_val/3band/
+      md5: 06fe3e88fef53de980224c493f0b426e.dir
+      size: 3156960385
+      nfiles: 5899
+    - path: data/interim/SN1/train_val/8band/
+      md5: 03bcc4d78fa1d7f9fa44931e84fbb828.dir
+      size: 1061166088
+      nfiles: 5899
+    - path: data/interim/SN1/train_val/geojson/
+      md5: 39fce1de17942a04862483ed1d7e6f7e.dir
+      size: 171909486
+      nfiles: 5899
+    - path: data/interim/SN1/val/3band/
+      md5: eebf1028379d5b8bea85523cdc71a5ec.dir
+      size: 473627685
+      nfiles: 885
+    - path: data/interim/SN1/val/8band/
+      md5: 5ae408c920fd297fa68ac1111435ab06.dir
+      size: 159202200
+      nfiles: 885
+    - path: data/interim/SN1/val/geojson/
+      md5: e38408d63b12a6242e39154beec792b4.dir
+      size: 25107829
+      nfiles: 885
+    outs:
+    - path: data/interim/SN1/test/geo_raster_3band/
+      md5: 2a00b6f752ed45be80873a2d1e3cd205.dir
+      size: 2252943
+      nfiles: 1041
+    - path: data/interim/SN1/train/geo_raster_3band/
+      md5: f295fc1113049826e0b504d13e659b98.dir
+      size: 10883363
+      nfiles: 5014
+    - path: data/interim/SN1/train_val/geo_raster_3band/
+      md5: ae6d15ef17b957ee0a1156c2678e1c7a.dir
+      size: 12782297
+      nfiles: 5899
+    - path: data/interim/SN1/val/geo_raster_3band/
+      md5: 9405523670df4bf4a5f22d93bd901603.dir
+      size: 1898934
+      nfiles: 885
