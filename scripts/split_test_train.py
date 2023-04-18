@@ -7,23 +7,10 @@ from os import listdir
 from os.path import isfile, join
 import shutil
 
+from src.file_tools import get_all_files_in_path, extract_img_id_from_str
+from src.file_tools import derive_8band_file_names_from_image_ids, derive_json_file_names_from_image_ids
 
 # %%
-
-def get_all_files_in_path(this_path):
-    
-    dir_files = [f for f in listdir(this_path) if isfile(join(this_path, f))]
-    return dir_files
-
-def extract_img_id_from_str(filename):
-    """
-    filename: str of filename without path
-    """
-    
-    filename_no_extension = filename.split('.')[0]
-    img_id = filename_no_extension.split('_', 1)[1]
-    
-    return img_id
 
 def copy_files_to_dst_folder(file_list_df, src_data_path, dataset_type_folder):
 
@@ -77,8 +64,8 @@ if __name__ == '__main__':
     img_ids = [extract_img_id_from_str(fname) for fname in files_3band]
     
     # derive 8band and geojson files names from image IDs
-    derived_8band_files = [('8band_' + this_img_id + '.tif') for this_img_id in img_ids]
-    derived_json_files = [('Geo_' + this_img_id + '.geojson') for this_img_id in img_ids]
+    derived_8band_files = derive_8band_file_names_from_image_ids(img_ids)
+    derived_json_files = derive_json_file_names_from_image_ids(img_ids)
 
     # %% sanity checks
     assert len(files_3band) == len(files_8band)

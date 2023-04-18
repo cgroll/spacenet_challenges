@@ -13,24 +13,7 @@ from os.path import isfile, join
 import shutil
 
 from src.path import ProjPaths
-
-
-def get_all_files_in_path(this_path):
-    # TODO: refactor to src
-    
-    dir_files = [f for f in listdir(this_path) if isfile(join(this_path, f))]
-    return dir_files
-
-def extract_img_id_from_str(filename):
-    """
-    filename: str of filename without path
-    TODO: refactor to src
-    """
-    
-    filename_no_extension = filename.split('.')[0]
-    img_id = filename_no_extension.split('_', 1)[1]
-    
-    return img_id
+from src.file_tools import get_all_files_in_path, extract_img_id_from_str
 
 
 def rasterize_single_image(img_src, geo_src, raster_out_path):
