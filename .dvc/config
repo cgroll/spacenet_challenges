@@ -1,4 +1,6 @@
 [core]
-    remote = gdrive
+    remote = usb
 ['remote "gdrive"']
     url = gdrive://1DIOZXAgVSJKvRnf5-cmTaySH5RjBYyFL
+['remote "usb"']
+    url = /media/chris/Elements/dvc_data/spacenet_challenges/
