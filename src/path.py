@@ -8,6 +8,11 @@ class ProjPaths:
     raw_sn1_data_path = raw_data_path / "SN1"
     
     interim_sn1_data_path = data_path / "interim" / "SN1"
+
+    model_path = current_file_path.parent.parent / "models"
+    unet_path = model_path / "unet"
+
+    reports_path = current_file_path.parent.parent / "reports"
     
     
     

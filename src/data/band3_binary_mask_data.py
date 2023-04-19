@@ -94,16 +94,38 @@ class ToTensorImgAndLabels(object):
     Adapted from https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
     """
 
-    def __call__(self, sample):
+    def __call__(self, sample, extend=False):
         image, labels = sample['image'], sample['labels']
+
+        labels_torch = torch.from_numpy(labels.astype('float32'))
+        labels_torch = labels_torch[None, :]
 
         # swap color axis because
         # numpy image: H x W x C
         # torch image: C x H x W
         image = image.transpose((2, 0, 1))
         return {'image': torch.from_numpy(image.astype('float32')),
-                'labels': torch.from_numpy(labels.astype('float32'))} # TODO: change back to "labels" or use consistently
-    
+                'labels': labels_torch} # TODO: change back to "labels" or use consistently
+
+class ToTensorImgAndLabelsExtension(object):
+    """
+    Convert ndarrays in sample to Tensors.
+    Adapted from https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
+    """
+
+    def __call__(self, sample, extend=False):
+        image, labels = sample['image'], sample['labels']
+
+        labels_torch = torch.from_numpy(labels.astype('float32'))
+        labels_torch = labels_torch[None, :]
+
+        # swap color axis because
+        # numpy image: H x W x C
+        # torch image: C x H x W
+        image = image.transpose((2, 0, 1))
+        return {'image': torch.from_numpy(image.astype('float32')),
+                'labels': labels_torch} # TODO: change back to "labels" or use consistently
+
 
 if __name__ == '__main__':
     
