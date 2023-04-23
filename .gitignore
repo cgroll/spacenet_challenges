@@ -77,6 +77,10 @@ target/
 
 # exclude data from source control by default
 # /data/
+/reports/
+/tb_logs/
+/tb_logs_2/
+/tb_logs_3/
 
 # Mac OS-specific storage files
 .DS_Store
