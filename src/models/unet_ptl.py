@@ -1,38 +1,10 @@
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
-from torchvision import transforms
-from torch.utils.data import DataLoader
 import torch.nn.functional as F
 import numpy as np
 
-from src.data.band3_binary_mask_data import Band3BinaryMaskDataset, RandomCropImgAndLabels, ToTensorImgAndLabels, ToTensorImgAndLabelsExtension
-from src.path import ProjPaths
-
-
-IMAGE_PIXEL_SIZE = 384
-
-class UNetDataModule(pl.LightningDataModule):
-
-    def setup(self, stage):
-        train_path = ProjPaths.interim_sn1_data_path / "train"
-        val_path = ProjPaths.interim_sn1_data_path / "val"
-    
-        self.train_dataset = Band3BinaryMaskDataset(train_path, transform=transforms.Compose([
-                                                RandomCropImgAndLabels(IMAGE_PIXEL_SIZE),
-                                                ToTensorImgAndLabels()
-                                            ]))
-        self.val_dataset = Band3BinaryMaskDataset(val_path, transform=transforms.Compose([
-                                                RandomCropImgAndLabels(IMAGE_PIXEL_SIZE),
-                                                ToTensorImgAndLabels()
-                                            ]))
-        
-    def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=6, shuffle=True, num_workers=1)
-
-    def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=6, shuffle=False, num_workers=1)
-
+from src.config_vars import ConfigVariables
 
 # from https://www.kaggle.com/code/balraj98/unet-for-building-segmentation-pytorch
 
@@ -89,6 +61,7 @@ class UNet(pl.LightningModule):
         
         # implementation of UNet with 1 layers less than original UNet. Usually there should be 5 down and up blocks.
         # see: https://www.kaggle.com/code/alexj21/pytorch-eda-unet-from-scratch-finetuning
+        # but: this is anyways not the real UNet, because it already is using batchnorm which was not present in original implementation
 
         self.up_sample_mode = up_sample_mode
         # Downsampling Path
@@ -108,6 +81,8 @@ class UNet(pl.LightningModule):
 
         self.lr = lr
         self.optimizer = optimizer
+
+        IMAGE_PIXEL_SIZE = ConfigVariables.unet_3band_img_pixel_size
 
         self.example_input_array = torch.rand(1, 3, IMAGE_PIXEL_SIZE, IMAGE_PIXEL_SIZE)
 
@@ -183,14 +158,14 @@ if __name__ == '__main__':
     from pytorch_lightning.loggers import TensorBoardLogger
     from pytorch_lightning.callbacks import ModelCheckpoint
     from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+    from src.data.unet_data_loader import UNetDataModule
+    from pathlib import PureWindowsPath
     
     MAX_EPOCHS = 20 # 20
     OPTIMIZER = 'Adam'
     LOSS_FUNC = ''
 
     data_module = UNetDataModule()
-    
-    from pathlib import PureWindowsPath
 
     for this_lr in [0.0002]: #[0.00008, 0.0001]: # [0.00008, 0.0001, 0.00015]: #, 0.0002
 
