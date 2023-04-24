@@ -124,3 +124,41 @@ stages:
       md5: 9405523670df4bf4a5f22d93bd901603.dir
       size: 1898934
       nfiles: 885
+  evaluate_UNetFineTuned:
+    cmd: python scripts/evaluate_model.py --output_fname unet_ft_v8.csv --model_name
+      UNetFineTuned
+    deps:
+    - path: data/interim/SN1/test/3band/
+      md5: 6626ba48220e903186703cf7970d5ca2.dir
+      size: 557120871
+      nfiles: 1041
+    - path: data/interim/SN1/test/geo_raster_3band/
+      md5: 2a00b6f752ed45be80873a2d1e3cd205.dir
+      size: 2252943
+      nfiles: 1041
+    - path: models/unet/unet_finetuned_v8/checkpoints/best_model-unet-epoch=03-val_loss=0.09.ckpt
+      md5: c50cedcef81295f18a52cf65ee1bb22b
+      size: 293525895
+    outs:
+    - path: data/output/metrics/unet_ft_v8.csv
+      md5: 25889a8e2991746ff4304751aa130488
+      size: 92909
+  evaluate_UNet:
+    cmd: python scripts/evaluate_model.py --output_fname unet_ptl_v5.csv --model_name
+      UNet
+    deps:
+    - path: data/interim/SN1/test/3band/
+      md5: 6626ba48220e903186703cf7970d5ca2.dir
+      size: 557120871
+      nfiles: 1041
+    - path: data/interim/SN1/test/geo_raster_3band/
+      md5: 2a00b6f752ed45be80873a2d1e3cd205.dir
+      size: 2252943
+      nfiles: 1041
+    - path: models/unet/unet_ptl_v5/checkpoints/best_model-unet-epoch=15-val_loss=0.09.ckpt
+      md5: 1f761fb1ffc6276291b74299bd56fd4a
+      size: 443727615
+    outs:
+    - path: data/output/metrics/unet_ptl_v5.csv
+      md5: b8925f0a19598369d1f1fb9986d7f05d
+      size: 92697

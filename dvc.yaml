@@ -36,3 +36,19 @@ stages:
     - data/interim/SN1/train_val/geo_raster_3band/
     - data/interim/SN1/train/geo_raster_3band/
     - data/interim/SN1/val/geo_raster_3band/
+  evaluate_UNet:
+    cmd: python scripts/evaluate_model.py --output_fname unet_ptl_v5.csv --model_name UNet
+    deps:
+    - data/interim/SN1/test/3band/
+    - data/interim/SN1/test/geo_raster_3band/
+    - models/unet/unet_ptl_v5/checkpoints/best_model-unet-epoch=15-val_loss=0.09.ckpt
+    outs:
+    - data/output/metrics/unet_ptl_v5.csv
+  evaluate_UNetFineTuned:
+    cmd: python scripts/evaluate_model.py --output_fname unet_ft_v8.csv --model_name UNetFineTuned
+    deps:
+    - data/interim/SN1/test/3band/
+    - data/interim/SN1/test/geo_raster_3band/
+    - models/unet/unet_finetuned_v8/checkpoints/best_model-unet-epoch=03-val_loss=0.09.ckpt
+    outs:
+    - data/output/metrics/unet_ft_v8.csv

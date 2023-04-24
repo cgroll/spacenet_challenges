@@ -6,6 +6,8 @@ class ProjPaths:
     data_path = current_file_path.parent.parent / "data"
     raw_data_path = data_path / "raw"
     raw_sn1_data_path = raw_data_path / "SN1"
+
+    metrics_path = data_path / 'output' / 'metrics'
     
     interim_sn1_data_path = data_path / "interim" / "SN1"
 
