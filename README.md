@@ -3,6 +3,15 @@ spacenet_challenges
 
 Satellite image applications with SpaceNet data
 
+
+Tensorboard
+-----------
+
+```
+tensorboard --logdir tb_logs/
+```
+
+
 Project Organization
 ------------
 
