@@ -1,0 +1,5 @@
+outs:
+- md5: 80faa909c3a66e9cde3ceef4303cf89f.dir
+  size: 293799139
+  nfiles: 3
+  path: unet_finetuned_v8

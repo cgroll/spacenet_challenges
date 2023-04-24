@@ -1,0 +1,4 @@
+outs:
+- md5: 9dedbc98f299e1fc644e247b973f375a
+  size: 443726149
+  path: unet_v1_best.pth
