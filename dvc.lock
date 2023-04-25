@@ -141,8 +141,8 @@ stages:
       size: 293525895
     outs:
     - path: data/output/metrics/unet_ft_v8.csv
-      md5: 25889a8e2991746ff4304751aa130488
-      size: 92909
+      md5: 586a091a6394c01da3bc42e0c39e88be
+      size: 93148
   evaluate_UNet:
     cmd: python scripts/evaluate_model.py --output_fname unet_ptl_v5.csv --model_name
       UNet
@@ -160,5 +160,5 @@ stages:
       size: 443727615
     outs:
     - path: data/output/metrics/unet_ptl_v5.csv
-      md5: b8925f0a19598369d1f1fb9986d7f05d
-      size: 92697
+      md5: d6394271a34a5a3cd9d07c332d44d5fb
+      size: 92502
