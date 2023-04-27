@@ -1,12 +1,11 @@
 # %%
-from torch.utils.data import DataLoader
 from torchvision import transforms
 import torch
 from tqdm import tqdm
 import pandas as pd
 import click
 
-from src.data.band3_binary_mask_data import Band3BinaryMaskDataset, RandomCropImgAndLabels, ToTensorImgAndLabels, ToTensorImgAndLabelsExtension
+from src.data.band3_binary_mask_data import Band3BinaryMaskDataset, UpperLeftCropImgAndLabels, ToTensorImgAndLabels, ToTensorImgAndLabelsExtension
 from src.path import ProjPaths
 from src.metrics import sample_logits_and_labels, logits_to_prediction, classification_cases, prediction_metrics
 
@@ -47,11 +46,9 @@ def compute_metrics(model_name, output_fname):
     
     test_path = ProjPaths.interim_sn1_data_path / "test"
     test_dataset = Band3BinaryMaskDataset(test_path, transform=transforms.Compose([
-                                               RandomCropImgAndLabels(384),
+                                               UpperLeftCropImgAndLabels(384),
                                                ToTensorImgAndLabels()
                                            ]))
-    
-    test_dataloader = DataLoader(test_dataset, batch_size=6, shuffle=False, num_workers=0)
 
     # %%
     

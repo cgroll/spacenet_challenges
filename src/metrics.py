@@ -52,3 +52,19 @@ def prediction_metrics(true_pos, true_neg, false_pos, false_neg):
     metrics_df['accuracy'] = (metrics_df['true_pos'] + metrics_df['true_neg']) / metrics_df['n_pixels']
 
     return metrics_df
+
+def compute_true_false_classifications_for_sample_and_model(sample, model, DEVICE):
+    
+    # Compute model predictions
+    labels, logits = sample_logits_and_labels(sample, model, DEVICE)
+    pred = logits_to_prediction(logits, pred_threshold=0.5)
+    true_pos, true_neg, false_pos, false_neg = classification_cases(labels, pred)
+    
+    # Translate into true / false positives / negatives:
+    classes = np.zeros(true_pos.shape)
+    classes[true_neg] = 0
+    classes[false_pos] = 1
+    classes[false_neg] = 2
+    classes[true_pos] = 3
+    
+    return classes

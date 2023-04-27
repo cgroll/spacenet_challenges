@@ -9,58 +9,9 @@ from matplotlib.colors import ListedColormap
 
 from src.data.band3_binary_mask_data import Band3BinaryMaskDataset, RandomCropImgAndLabels, ToTensorImgAndLabels, ToTensorImgAndLabelsExtension
 from src.path import ProjPaths
+from src.metrics import sample_logits_and_labels, logits_to_prediction, classification_cases, prediction_metrics
 # %%
 
-def tensor_to_numpy(batch_tensor):
-    return batch_tensor.cpu().detach().numpy()[0, 0, :, :]
-
-def logits_to_prediction(logits, pred_threshold=0.5):
-    pred = (logits > pred_threshold) * 1
-    return pred
-
-def sample_logits_and_labels(sample, model, DEVICE):
-
-    data = sample['image']
-    data = data[None, :] # add dimension to make it a batch
-
-    target = sample['labels']
-    target = target[None, :] # add dimension to make it a batch
-
-    data, target = data.to(DEVICE), target.to(DEVICE)
-    output = model(data)
-
-    labels = tensor_to_numpy(target)
-    logits = tensor_to_numpy(output)
-
-    return labels, logits
-
-def classification_cases(labels, pred):
-
-    true_pos = (labels == 1) & (pred == 1)
-    true_neg = (labels == 0) & (pred == 0)
-    false_pos = (labels == 0) & (pred == 1)
-    false_neg = (labels == 1) & (pred == 0)
-
-    # check that all pixels are in one of the categories
-    n_pixels = np.prod(labels.shape)
-    assert true_pos.sum() + true_neg.sum() + false_neg.sum() + false_pos.sum() == n_pixels
-
-    return true_pos, true_neg, false_pos, false_neg
-
-def prediction_metrics(true_pos, true_neg, false_pos, false_neg):
-    metrics = {'n_pixels': np.prod(true_pos.shape), 
-            'true_pos': true_pos.sum(), 'true_neg': true_neg.sum(),
-            'false_pos': false_pos.sum(), 'false_neg': false_neg.sum()}
-
-    metrics_df = pd.DataFrame.from_dict({0: metrics}, orient='index')
-    metrics_df['n_building'] = metrics_df['true_pos'] + metrics_df['false_neg']
-    metrics_df['building_cover'] = metrics_df['n_building'] / metrics_df['n_pixels']
-    metrics_df['n_union'] = metrics_df['true_pos'] + metrics_df['false_pos'] + metrics_df['false_neg']
-    metrics_df['jaccard'] = metrics_df['true_pos'] / metrics_df['n_union'] # TODO: case where union is 0
-    metrics_df['dice'] = 2*metrics_df['true_pos'] / (2*metrics_df['true_pos'] + metrics_df['false_pos'] + metrics_df['false_neg']) # TODO: case without any building / building prediction
-    metrics_df['accuracy'] = (metrics_df['true_pos'] + metrics_df['true_neg']) / metrics_df['n_pixels']
-
-    return metrics_df
 
 # %%
 
@@ -132,47 +83,9 @@ if __name__ == '__main__':
 
     # %%
 
-    from tqdm import tqdm
-    
-    all_metrics_list = []
-
-    for this_sample_id in tqdm(range(0, len(test_dataset))):
-
-        sample = test_dataset[this_sample_id]
-        labels, logits = sample_logits_and_labels(sample, model, DEVICE)
-        pred = logits_to_prediction(logits, pred_threshold=0.5)
-        true_pos, true_neg, false_pos, false_neg = classification_cases(labels, pred)
-        metrics_df = prediction_metrics(true_pos, true_neg, false_pos, false_neg)
-        metrics_df.index = [this_sample_id]
-
-        all_metrics_list.append(metrics_df)
-
-    all_metrics = pd.concat(all_metrics_list)
-
-    # fix NaN metrics for images without buildings
-    xx_inds_zero_build = (all_metrics['true_pos'] == 0) & (all_metrics['false_pos'] == 0)
-    all_metrics.loc[xx_inds_zero_build, 'jaccard']  = 1
-    all_metrics.loc[xx_inds_zero_build, 'dice']  = 1
 
 
     # %% analyse / visualize all metrics
-
-    #sns.scatterplot(x='jaccard', y='dice', data=all_metrics)
-    
-    sns.scatterplot(x='jaccard', y='accuracy', data=all_metrics)
-    # this_sample_id = 122
-
-    # %%
-
-    sns.histplot(all_metrics['building_cover'])
-
-    # %%
-
-    sns.scatterplot(x='building_cover', y='accuracy', data=all_metrics)
-
-    # %%
-
-    sns.scatterplot(x='building_cover', y='jaccard', data=all_metrics)
 
     # %% visualize single sample
 
