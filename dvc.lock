@@ -160,5 +160,5 @@ stages:
       size: 443727615
     outs:
     - path: data/output/metrics/unet_ptl_v5.csv
-      md5: d6394271a34a5a3cd9d07c332d44d5fb
+      md5: 399353620c4f28bf8c0ffcdf729828cb
       size: 92502
