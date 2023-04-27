@@ -87,7 +87,38 @@ class RandomCropImgAndLabels(object):
                       left: left + new_w]
 
         return {'image': image, 'labels': labels}
-    
+
+class UpperLeftCropImgAndLabels(object):
+
+    def __init__(self, output_size):
+        assert isinstance(output_size, (int, tuple))
+        if isinstance(output_size, int):
+            self.output_size = (output_size, output_size)
+        else:
+            assert len(output_size) == 2
+            self.output_size = output_size
+
+    def __call__(self, sample):
+        
+        image, labels = sample['image'], sample['labels']
+
+        h, w = image.shape[:2]
+        new_h, new_w = self.output_size
+        
+        if (h < self.output_size[0]) | (w < self.output_size[1]): # TODO: check size[0], size[1]
+            raise ValueError(f'Image already smaller than requested crop size: width {w}, height {h}')
+
+        top = 0
+        left = 0
+
+        image = image[top: top + new_h,
+                      left: left + new_w]
+
+        labels = labels[top: top + new_h,
+                      left: left + new_w]
+
+        return {'image': image, 'labels': labels}
+
 class ToTensorImgAndLabels(object):
     """
     Convert ndarrays in sample to Tensors.
