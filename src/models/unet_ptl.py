@@ -84,7 +84,7 @@ class UNet(pl.LightningModule):
 
         IMAGE_PIXEL_SIZE = ConfigVariables.unet_3band_img_pixel_size
 
-        self.example_input_array = torch.rand(1, 3, IMAGE_PIXEL_SIZE, IMAGE_PIXEL_SIZE)
+        self.example_input_array = torch.rand(1, input_channels, IMAGE_PIXEL_SIZE, IMAGE_PIXEL_SIZE)
 
     # def on_train_start(self):
     #     self.logger.log_hyperparams(self.hparams, {'max_epochs': self.trainer.max_epochs, 'hp_metric': -3})

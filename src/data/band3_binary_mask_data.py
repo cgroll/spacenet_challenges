@@ -8,7 +8,8 @@ from PIL import Image
 import numpy as np
 from numpy import asarray
 
-from src.file_tools import get_all_files_in_path, extract_img_id_from_str, derive_geo_raster_file_names_from_image_ids
+from src.file_tools import get_all_files_in_path, extract_img_id_from_str, derive_geo_raster_file_names_from_image_ids, \
+    derive_sam_dist_transf_file_names_from_image_ids, derive_label_dist_transf_file_names_from_image_ids
 
 # %%
 
@@ -158,14 +159,71 @@ class ToTensorImgAndLabelsExtension(object):
                 'labels': labels_torch} # TODO: change back to "labels" or use consistently
 
 
+## data loader for distance transform inputs / outputs
+
+class SamDistTransfDataset(Dataset):
+    
+    def __init__(self, root_dir, transform=None):
+        
+        self.root_dir = root_dir # train, test, ...
+        
+        img_file_list = get_all_files_in_path(self.root_dir / "3band")
+        
+        self.image_ids = [extract_img_id_from_str(fname) for fname in img_file_list]
+        self.files_3band = img_file_list
+        self.files_sam_dist_transf = derive_sam_dist_transf_file_names_from_image_ids(self.image_ids)
+        self.files_dist_transf_labels = derive_label_dist_transf_file_names_from_image_ids(self.image_ids)
+        
+        self.transform = transform
+    
+    def __len__(self):
+        
+        return len(self.image_ids)
+    
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        img_file_path = self.root_dir / "3band" / self.files_3band[idx]
+        dist_transf_labels_file_path = self.root_dir / "distance_transformed_label" / self.files_dist_transf_labels[idx]
+        sam_dist_transf_file_path = self.root_dir / "sam_distance_transformed" / self.files_sam_dist_transf[idx]
+        
+        img_darr = rioxarray.open_rasterio(img_file_path)
+        img_data = img_darr.values / 256
+        img_data = np.transpose(img_data, (1, 2, 0))
+        
+        sam_distances = Image.open(sam_dist_transf_file_path)
+        sam_distances_np = asarray(sam_distances)
+        sam_distances_np = sam_distances_np[:, :, np.newaxis]
+        
+        input_data = np.concatenate([img_data, sam_distances_np], axis=2)
+
+        label_distances = Image.open(dist_transf_labels_file_path)
+        label_distances_np = asarray(label_distances)
+        
+        sample = {'image': input_data, 'labels': label_distances_np * 1.0}
+
+        if self.transform:
+            sample = self.transform(sample)
+
+        return sample
+
+
 if __name__ == '__main__':
     
     train_path = ProjPaths.interim_sn1_data_path / "train"
     
-    train_dataset = Band3BinaryMaskDataset(train_path, transform=transforms.Compose([
+    # train_dataset = Band3BinaryMaskDataset(train_path, transform=transforms.Compose([
+    #                                            RandomCropImgAndLabels(406),
+    #                                            ToTensorImgAndLabels()
+    #                                        ]))
+    
+    train_dataset = SamDistTransfDataset(train_path, transform=transforms.Compose([
                                                RandomCropImgAndLabels(406),
                                                ToTensorImgAndLabels()
                                            ]))
+    
+    # train_dataset[5]
     
     # this_sample = train_dataset[5]
     
@@ -176,7 +234,7 @@ if __name__ == '__main__':
             sample_batched['labels'].size())
 
         # observe 4th batch and stop.
-        if i_batch == 300000:
+        if i_batch == 4:
             break
             # plt.figure()
             # show_landmarks_batch(sample_batched)

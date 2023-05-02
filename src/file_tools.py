@@ -30,3 +30,9 @@ def derive_3band_file_names_from_image_ids(img_ids):
 def derive_geo_raster_file_names_from_image_ids(img_ids):
     return [('GeoRaster_' + this_img_id + '.png') for this_img_id in img_ids]
 
+def derive_sam_dist_transf_file_names_from_image_ids(img_ids):
+    return [('sam_' + this_img_id + '.png') for this_img_id in img_ids]
+
+def derive_label_dist_transf_file_names_from_image_ids(img_ids):
+    return [('dist_trans_' + this_img_id + '.png') for this_img_id in img_ids]
+
