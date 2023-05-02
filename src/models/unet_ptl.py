@@ -54,7 +54,7 @@ class UpBlock(nn.Module):
 
     
 class UNet(pl.LightningModule):
-    def __init__(self, out_classes=1, up_sample_mode='conv_transpose', lr=0.00008, optimizer='Adam'):
+    def __init__(self, input_channels=3, out_classes=1, up_sample_mode='conv_transpose', lr=0.00008, optimizer='Adam'):
         super(UNet, self).__init__()
 
         # self.save_hyperparameters()
@@ -65,7 +65,7 @@ class UNet(pl.LightningModule):
 
         self.up_sample_mode = up_sample_mode
         # Downsampling Path
-        self.down_conv1 = DownBlock(3, 64)
+        self.down_conv1 = DownBlock(input_channels, 64)
         self.down_conv2 = DownBlock(64, 128)
         self.down_conv3 = DownBlock(128, 256)
         self.down_conv4 = DownBlock(256, 512)
