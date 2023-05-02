@@ -1,0 +1,5 @@
+outs:
+- md5: 982b54dbfaca3feb2e8d6cb95a54e871.dir
+  size: 15448587
+  nfiles: 1041
+  path: sam_distance_transformed

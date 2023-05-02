@@ -1,0 +1,5 @@
+outs:
+- md5: 5065f3192513e24037c4761c9b0cdf3b.dir
+  size: 111051289
+  nfiles: 5899
+  path: distance_transformed_label
